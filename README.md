@@ -15,7 +15,7 @@ to support online compilation of user code in a safe sandbox.
 
 Given a source code:
 
-	$ source='void main() { import std.stdio; writeln("Hello World"); }
+	$ source='void main() { import std.stdio; writeln("Hello World"); }'
 
 Convert it to Base64:
 
@@ -25,6 +25,21 @@ Run the docker container passing the base64 source as
 command line parameter:
 
 	$ docker run --rm stonemaster/dlang-tour-rdmd $bsource
+	Hello World
+
+### Stdin
+
+	$ bsource=$(echo 'void main() { import std.algorithm, std.stdio; stdin.byLine.each!writeln; }' | base64 -w0)
+	$ bstdin=$(printf 'Venus\nParis\nMontreal' | base64 -w0)
+	$ docker run --rm stonemaster/dlang-tour-rdmd $bsource $bstdin
+	Venus
+	Paris
+	Montreal
+
+### Custom compiler arguments
+
+	$ bsource=$(echo 'void main() { import std.stdio; version(Foo) writeln("Hello World"); }' | base64 -w0)
+	$ DOCKER_FLAGS="-version=Foo" docker run -e DOCKER_FLAGS --rm stonemaster/dlang-tour-rdmd $bsource
 	Hello World
 
 ## Docker image
