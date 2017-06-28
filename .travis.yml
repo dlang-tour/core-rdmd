@@ -5,6 +5,7 @@ services:
 
 script:
   - docker build -t stonemaster/dlang-tour-rdmd .
+  - ./test.sh stonemaster/dlang-tour-rdmd
 
 after_success:
   - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
